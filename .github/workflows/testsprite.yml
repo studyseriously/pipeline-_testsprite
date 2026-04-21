@@ -2,10 +2,7 @@ name: Run Tests
 on:
   push:
     branches: [ "main" ]
-  workflow_dispatch: # Allows you to trigger the test manually from GitHub
-
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  workflow_dispatch:
 
 jobs:
   test:
@@ -17,17 +14,11 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-
-      - name: Install TestSprite
-        run: npm install -g testsprite
+          node-version: '22' # Using a newer version avoids the deprecation warning
 
       - name: Run tests
         env:
           TESTSPRITE_API_KEY: ${{ secrets.TESTSPRITE_API_KEY }}
-        # Update the command below with your specific details
+        # npx handles the "installation" and execution in one step
         run: |
-          testsprite run \
-            --id "f8fe7358-29f8-42c1-92fc-f15189fca649" \
-            --url "https://doctrine-amiable-movie.ngrok-free.dev" \
-            --upload-docs "./api-docs.yaml"
+          npx testsprite run --id "YOUR_TEST_LIST_ID" --url "https://your-ngrok-link.ngrok-free.app"
