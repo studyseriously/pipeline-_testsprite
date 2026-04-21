@@ -1,35 +1,24 @@
-name: TestSprite AI Testing Pipeline
-
+name: Run Tests
 on:
   push:
     branches: [ "main" ]
-  workflow_dispatch: # Allows manual trigger from the GitHub Actions tab
 
 env:
-  # Opt-in to Node 24 and silence deprecation warnings for 2026
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true 
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
-  run-ai-tests:
+  test:
     runs-on: ubuntu-latest
-    
     steps:
-      - name: Checkout Repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22' # Using the stable LTS version
-
-      - name: Execute TestSprite Run
-        env:
-          # Make sure this is in Settings > Secrets and variables > Actions
-          TESTSPRITE_API_KEY: ${{ secrets.TESTSPRITE_API_KEY }}
+      - name: Trigger TestSprite via API
         run: |
-          # Use npx to download and run the MCP package
-          # Note: We use the -p flag to map the package to the executable name
-          npx -y -p @testsprite/testsprite-mcp testsprite run \
-            --id "f8fe7358-29f8-42c1-92fc-f15189fca649" \
-            --url "https://doctrine-amiable-movie.ngrok-free.dev/" \
-            --verbose
+          curl -X POST "https://api.testsprite.com/v1/run" \
+            -H "Authorization: Bearer ${{ secrets.TESTSPRITE_API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "suite_id": "f8fe7358-29f8-42c1-92fc-f15189fca649",
+              "url": "https://doctrine-amiable-movie.ngrok-free.dev/"
+            }'
