@@ -21,4 +21,4 @@ jobs:
           TESTSPRITE_API_KEY: ${{ secrets.TESTSPRITE_API_KEY }}
         # npx handles the "installation" and execution in one step
         run: |
-          npx testsprite run --id "YOUR_TEST_LIST_ID" --url "https://your-ngrok-link.ngrok-free.app"
+          npx testsprite run --id "f8fe7358-29f8-42c1-92fc-f15189fca649" --url "https://your-ngrok-link.ngrok-free.app"
